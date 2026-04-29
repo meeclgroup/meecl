@@ -116,7 +116,7 @@ body {
 .grid-main {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: 1fr clamp(1rem, 2.2vh, 1.6rem) repeat(6, 1fr) 1fr;
+  /* grid-template-rows는 JS에서 5주/6주에 따라 동적으로 설정 */
 
   flex: 1;
   gap: clamp(0.15rem, 0.4vh, 0.45rem);
@@ -133,19 +133,22 @@ body {
         .day-label { text-align: center; font-weight: bold; font-size: clamp(0.5rem, 1vw, 0.75rem); line-height: clamp(18px, 3.5vw, 26px); color: var(--text-sub); background: var(--input-bg); }
         .sat { color: var(--sat-color) !important; } .sun { color: var(--holiday-color) !important; }
 
-        .date-top-row { display: flex; justify-content: space-between; padding: clamp(1px, 0.3vh, 3px) clamp(3px, 0.8vw, 7px); cursor: pointer; height: auto; min-height: 0; align-items: flex-start; flex-shrink: 0; }
-        .left-info-stack { display: grid; grid-template-columns: auto 1fr; column-gap: clamp(2px, 0.4vw, 4px); flex: 1; line-height: 1.0; min-width: 0; }
+        .date-top-row { display: flex; justify-content: space-between; padding: clamp(1px, 0.3vh, 3px) clamp(3px, 0.8vw, 7px); cursor: pointer; height: auto; min-height: 0; align-items: flex-start; flex-shrink: 0; overflow: hidden; }
+        .left-info-stack { display: grid; grid-template-columns: auto 1fr; column-gap: clamp(2px, 0.4vw, 4px); flex: 1; line-height: 1.0; min-width: 0; overflow: hidden; }
         .date-num { grid-row: 1/4; grid-column: 1; font-weight: bold; font-size: clamp(0.65rem, 1.4vw, 1.1rem); line-height: 1; color: var(--text-main); padding-top: 1px; }
         
-        .line-1, .line-2, .line-3 { grid-column: 2; font-size: clamp(0.38rem, 0.76vw, 0.58rem); font-weight: bold; line-height: 1.15; white-space: nowrap; overflow: visible; }
+        .line-1, .line-2, .line-3 { grid-column: 2; font-size: clamp(0.36rem, 0.7vw, 0.55rem); font-weight: bold; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
         .txt-red { color: var(--holiday-color) !important; } .txt-green { color: var(--season-color) !important; } .txt-black { color: var(--normal-day-color); }
         
-        .money-info-group { display: flex; flex-direction: column; text-align: right; width: clamp(32px, 6vw, 52px); font-size: clamp(0.36rem, 0.74vw, 0.58rem); line-height: 1.15; color: var(--text-main); flex-shrink: 0; }
+        .money-info-group { display: flex; flex-direction: column; text-align: right; width: clamp(28px, 5.5vw, 50px); font-size: clamp(0.33rem, 0.68vw, 0.55rem); line-height: 1.15; color: var(--text-main); flex-shrink: 0; margin-left: 2px; }
         .in-s { color: var(--income-color); font-weight: bold; } .out-s { color: var(--expense-color); font-weight: bold; } 
         .bal-s { font-weight: 900; color: var(--text-main); }
 
         .cell-memos { flex-grow: 1; display: flex; flex-direction: column; padding: clamp(1px, 0.3vw, 2px); gap: 1px; overflow: hidden; }
         .cell-memos textarea { flex: 1; border: none; background: var(--input-bg); color: var(--text-main); border-radius: clamp(3px, 0.6vw, 6px); padding: clamp(1px, 0.3vw, 3px) clamp(2px, 0.5vw, 4px); font-size: clamp(0.5rem, 1vw, 0.78rem); resize: none; line-height: 1.1; outline: none; scrollbar-width: none; }
+        /* 이전달/다음달 날짜 — 흐리게, 메모 입력 비활성 */
+        .cell.other-month { opacity: 0.32; background: var(--input-bg); }
+        .cell.other-month .cell-memos textarea { pointer-events: none; background: transparent; }
         
         .week-cell { background: var(--input-bg); padding: clamp(2px, 0.5vw, 4px); box-sizing: border-box; }
         .week-box { height: 48.5%; border: 1px solid var(--border-color); border-radius: clamp(4px, 0.8vw, 8px); background: var(--container-bg); margin-bottom: 3%; padding: clamp(2px, 0.5vw, 4px); display: flex; flex-direction: column; overflow: hidden; box-sizing: border-box; }
@@ -194,16 +197,8 @@ body {
         <div style="font-weight:bold; text-align:center; margin-bottom:20px;">설정</div>
         <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span>야간 모드</span><button onclick="toggleDark()" id="darkBtn" style="padding:5px 10px; border-radius:8px; border:1px solid #ccc;">OFF</button></div>
         <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span>시작 요일</span><button onclick="toggleStartDay()" id="startDayBtn" style="padding:5px 10px; border-radius:8px; border:1px solid #ccc;">월요일</button></div>
-        <div style="margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;"><span>알림 시간 (오전)</span><input type="time" id="alarmTime" onchange="db.alarmTime=this.value; save();" style="padding:4px; border-radius:5px; border:1px solid #ccc;"></div>
-        
-<div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-    <span>자동 백업</span>
-    <input type="checkbox" id="autoBackupToggle" onchange="toggleAutoBackup(this.checked)">
-</div>
-<div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-    <span>마지막 백업</span>
-    <span id="lastBackupText" style="font-size:0.8rem; color:#888;">없음</span>
-</div>
+
+
 <div style="display:flex; justify-content:space-between; align-items:center;"><span>데이터 관리</span>
 <div><button onclick="exportData()" style="padding:5px 10px; font-size:0.7rem; border-radius:5px; border:1px solid #ccc;">백업</button><button onclick="document.getElementById('importFile').click()" style="padding:5px 10px; font-size:0.7rem; border-radius:5px; border:1px solid #ccc;">복원</button></div></div>
         <input type="file" id="importFile" style="display:none" onchange="importData(this)">
@@ -307,20 +302,15 @@ body {
 
     let curr = new Date();
     const dbKey = "pastel_eternal_final_v32";
-    let db = JSON.parse(localStorage.getItem(dbKey)) || { isDark: false, startDaySun: false, alarmTime: "09:00", autoBackup: false, lastBackup: null };
+    let db = JSON.parse(localStorage.getItem(dbKey)) || { isDark: false, startDaySun: false };
     let activeKey = "";
-    const alarmSound = new Audio("alarm.mp3");
 
-    function save() { localStorage.setItem(dbKey, JSON.stringify(db)); autoBackup(); }
+    function save() { localStorage.setItem(dbKey, JSON.stringify(db)); }
     window.onload = function() {
         if(db.isDark) document.body.classList.add('dark-mode');
         document.getElementById('darkBtn').innerText = db.isDark ? "ON" : "OFF";
         document.getElementById('startDayBtn').innerText = db.startDaySun ? "일요일" : "월요일";
-        document.getElementById('alarmTime').value = db.alarmTime || "09:00";
-        document.getElementById('autoBackupToggle').checked = db.autoBackup || false;
-        updateLastBackupText();
-        
-        init(); setInterval(checkAlarm, 30000);
+        init();
     };
 
     
@@ -338,16 +328,6 @@ body {
     function moveMonth(v) { curr.setMonth(curr.getMonth() + v); init(); }
     function moveYear(v) { curr.setFullYear(curr.getFullYear() + v); init(); }
 
-    function checkAlarm() {
-        const now = new Date();
-        const time = now.getHours().toString().padStart(2,'0')+":"+now.getMinutes().toString().padStart(2,'0');
-        if(time === db.alarmTime) {
-            const k = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;
-            if(db[k] && (db[k].m1?.includes('!') || db[k].m2?.includes('!') || db[k].m3?.includes('!'))) {
-                alarmSound.play(); alert("중요 알림이 있습니다!");
-            }
-        }
-    }
 
     function exportData() {
         const blob = new Blob([JSON.stringify(db)], {type:'application/json'});
@@ -370,31 +350,74 @@ body {
     function renderCalendar() {
         const grid = document.getElementById('mainGrid'); grid.innerHTML = '';
         const y = curr.getFullYear(), m = curr.getMonth();
-        for(let i=0; i<8; i++){ const k=`fixed-top-${i}`; const c=document.createElement('div'); c.className="cell split-memo"; c.innerHTML=`<textarea onblur="db['${k}']=this.value; save()">${db[k]||''}</textarea>`; grid.appendChild(c); }
-        const days = db.startDaySun ? ['주차','일','월','화','수','목','금','토'] : ['주차','월','화','수','목','금','토','일'];
-        days.forEach(d => { const c=document.createElement('div'); c.className=`day-label ${d==='토'?'sat':(d==='일'||d==='주차'?'sun':'')}`; c.innerText=d; grid.appendChild(c); });
+        const lastD = new Date(y, m+1, 0).getDate();
         const firstD = new Date(y, m, 1).getDay();
         let startIdx = db.startDaySun ? firstD : (firstD===0?6:firstD-1);
-        const lastD = new Date(y, m+1, 0).getDate();
-        let dateCount=1, runningBal=0, lastRec=0;
+
+        // 5주로 끝나는지 6주 필요한지 계산
+        const totalCells = startIdx + lastD;
+        const numWeeks = Math.ceil(totalCells / 7);  // 5 or 6
+
+        // grid rows 동적 설정: 상단메모 | 요일 | N주 | 하단메모
+        grid.style.gridTemplateRows = `1fr clamp(1rem,2.2vh,1.6rem) repeat(${numWeeks},1fr) 1fr`;
+
+        // 상단 메모
+        for(let i=0; i<8; i++){ const k=`fixed-top-${i}`; const c=document.createElement('div'); c.className="cell split-memo"; c.innerHTML=`<textarea onblur="db['${k}']=this.value; save()">${db[k]||''}</textarea>`; grid.appendChild(c); }
+
+        // 요일 헤더
+        const days = db.startDaySun ? ['주차','일','월','화','수','목','금','토'] : ['주차','월','화','수','목','금','토','일'];
+        days.forEach(d => { const c=document.createElement('div'); c.className=`day-label ${d==='토'?'sat':(d==='일'||d==='주차'?'sun':'')}`; c.innerText=d; grid.appendChild(c); });
+
+        // 이전달 정보
+        const prevMonthLastD = new Date(y, m, 0).getDate();
+        const prevY = m===0 ? y-1 : y, prevM = m===0 ? 12 : m;
+        const nextY = m===11 ? y+1 : y, nextM = m===11 ? 1 : m+2;
+
+        let dateCount=1, runningBal=0, lastRec=0, nextDateCount=1;
         for(let d=1; d<=lastD; d++) if(db[`${y}-${m+1}-${d}`]?.entries?.length>0) lastRec=d;
-        for(let w=0; w<6; w++) {
+
+        for(let w=0; w<numWeeks; w++) {
+            // 주차 셀
             const weekCell=document.createElement('div'); weekCell.className="cell week-cell";
-            const isL=(w===5); weekCell.innerHTML=`<div class="week-box"><div class="week-title">${isL?'1주 계획':(w+1)+'주 계획'}</div><div class="week-text" contenteditable="true" onfocus="this.closest('.week-box').classList.add('editing')" onblur="this.closest('.week-box').classList.remove('editing'); saveWeek(${y},m+1,${w},'plan',this)">${getWeekData(y,m+1,w,'plan')}</div></div><div class="week-box"><div class="week-title">${isL?'1주 평가':(w+1)+'주 평가'}</div><div class="week-text" contenteditable="true" onfocus="this.closest('.week-box').classList.add('editing')" onblur="this.closest('.week-box').classList.remove('editing'); saveWeek(${y},m+1,${w},'eval',this)">${getWeekData(y,m+1,w,'eval')}</div></div>`;
+            weekCell.innerHTML=`<div class="week-box"><div class="week-title">${w+1}주 계획</div><div class="week-text" contenteditable="true" onfocus="this.closest('.week-box').classList.add('editing')" onblur="this.closest('.week-box').classList.remove('editing'); saveWeek(${y},${m+1},${w},'plan',this)">${getWeekData(y,m+1,w,'plan')}</div></div><div class="week-box"><div class="week-title">${w+1}주 평가</div><div class="week-text" contenteditable="true" onfocus="this.closest('.week-box').classList.add('editing')" onblur="this.closest('.week-box').classList.remove('editing'); saveWeek(${y},${m+1},${w},'eval',this)">${getWeekData(y,m+1,w,'eval')}</div></div>`;
             grid.appendChild(weekCell);
+
             for(let d=0; d<7; d++) {
-                const c=document.createElement('div'); c.className="cell"; const idx=w*7+d;
-                if(idx>=startIdx && dateCount<=lastD) {
+                const c=document.createElement('div');
+                const idx = w*7+d;
+
+                if(idx < startIdx) {
+                    // 이전달 날짜
+                    const prevDay = prevMonthLastD - (startIdx - 1 - idx);
+                    const prevDI = new Date(prevY, prevM-1, prevDay).getDay();
+                    const prevH = getHolidays(prevY, prevM, prevDay), prevS = get24Seasons(prevM, prevDay);
+                    let prevLines=[]; if(prevS)prevLines.push(prevS); if(prevH)prevLines.push(prevH);
+                    c.className="cell other-month";
+                    c.innerHTML=`<div class="date-top-row"><div class="left-info-stack"><span class="date-num ${prevDI===0?'sun':(prevDI===6?'sat':'')}">${prevDay}</span>${prevLines.map((l,i)=>`<span class="line-${i+1} ${l.c}">${l.t}</span>`).join('')}</div><div class="money-info-group"></div></div><div class="cell-memos"><textarea></textarea><textarea></textarea><textarea></textarea></div>`;
+                } else if(dateCount <= lastD) {
+                    // 이번달 날짜
+                    c.className="cell";
                     const k=`${y}-${m+1}-${dateCount}`, dI=new Date(y,m,dateCount).getDay(), dayD=db[k]||{entries:[]};
                     let tin=0, tout=0; dayD.entries.forEach(e=>{if(e.type==='in')tin+=Number(e.amount);else tout+=Number(e.amount);});
-                    runningBal+=(tin-tout); const h=getHolidays(y,m+1,dateCount), s=get24Seasons(m+1,dateCount);
+                    runningBal+=(tin-tout);
+                    const h=getHolidays(y,m+1,dateCount), s=get24Seasons(m+1,dateCount);
                     let lines=[]; if(s)lines.push(s); if(h)lines.push(h);
                     c.innerHTML=`<div class="date-top-row" onclick="openModal('${k}')"><div class="left-info-stack"><span class="date-num ${dI===0?'sun':(dI===6?'sat':'')}">${dateCount}</span>${lines.map((l,i)=>`<span class="line-${i+1} ${l.c}">${l.t}</span>`).join('')}</div><div class="money-info-group">${dateCount<=lastRec?`<span class="in-s">+${tin.toLocaleString()}</span><span class="out-s">-${tout.toLocaleString()}</span><span class="bal-s">${runningBal.toLocaleString()}</span>`:''}</div></div><div class="cell-memos"><textarea onblur="upMemo('${k}','m1',this.value)">${dayD.m1||''}</textarea><textarea onblur="upMemo('${k}','m2',this.value)">${dayD.m2||''}</textarea><textarea onblur="upMemo('${k}','m3',this.value)">${dayD.m3||''}</textarea></div>`;
                     dateCount++;
+                } else {
+                    // 다음달 날짜
+                    const nextDI = new Date(nextY, nextM-1, nextDateCount).getDay();
+                    const nextH = getHolidays(nextY, nextM, nextDateCount), nextS = get24Seasons(nextM, nextDateCount);
+                    let nextLines=[]; if(nextS)nextLines.push(nextS); if(nextH)nextLines.push(nextH);
+                    c.className="cell other-month";
+                    c.innerHTML=`<div class="date-top-row"><div class="left-info-stack"><span class="date-num ${nextDI===0?'sun':(nextDI===6?'sat':'')}">${nextDateCount}</span>${nextLines.map((l,i)=>`<span class="line-${i+1} ${l.c}">${l.t}</span>`).join('')}</div><div class="money-info-group"></div></div><div class="cell-memos"><textarea></textarea><textarea></textarea><textarea></textarea></div>`;
+                    nextDateCount++;
                 }
                 grid.appendChild(c);
             }
         }
+
+        // 하단 메모
         for(let i=0; i<8; i++){ const k=`fixed-bot-${i}`; const c=document.createElement('div'); c.className="cell split-memo"; c.innerHTML=`<textarea onblur="db['${k}']=this.value; save()">${db[k]||''}</textarea>`; grid.appendChild(c); }
     }
     function getWeekData(y,m,w,t){ if(w===0){let pM=m-1,pY=y; if(pM===0){pM=12;pY--;} if(db[`${pY}-${pM}-w5-${t}`]) return db[`${pY}-${pM}-w5-${t}`];} return db[`${y}-${m}-w${w}-${t}`]||""; }
@@ -414,33 +437,6 @@ body {
         Object.keys(db).forEach(k=>{ if(k.startsWith('fixed')||['isDark','startDaySun','alarmTime'].includes(k)) return; const d=db[k], c=typeof d==='object'?`${d.m1||''} ${d.m2||''} ${d.m3||''}`:d; if(c&&c.includes(q)){ const item=document.createElement('div'); item.className='res-item'; let p=k.split('-'); item.innerHTML=`<strong>${k}</strong><br><small>${c.substring(0,20)}</small>`; item.onclick=()=>{curr=new Date(p[0],p[1]-1,1); init(); res.style.display='none';}; res.appendChild(item); } });
     }
 
-function toggleAutoBackup(val) {
-    db.autoBackup = val;
-    save();
-}
-
-function updateLastBackupText() {
-    const el = document.getElementById('lastBackupText');
-    if (!db.lastBackup) {
-        el.innerText = "없음";
-        return;
-    }
-    const d = new Date(db.lastBackup);
-    el.innerText = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
-}
-
-function autoBackup() {
-    if (!db.autoBackup) return;
-    const blob = new Blob([JSON.stringify(db)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    const now = new Date();
-    a.download = `가계부자동백업_${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}_${now.getHours()}-${now.getMinutes()}.json`;
-    a.click();
-    db.lastBackup = now.toISOString();
-    localStorage.setItem(dbKey, JSON.stringify(db)); // 직접 저장 (재귀 방지)
-    updateLastBackupText();
-}
 
 </script>
 </body>
