@@ -35,8 +35,11 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 100vh;
-  padding: clamp(2px, 0.8vh, 8px) clamp(4px, 1vw, 10px);
+  min-height: 100vh; /* 높이는 화면 전체를 채워야 하므로 vh 유지 */
+  
+  /* 패딩을 rem으로 통일 (기준점 10px 가정 시 0.2rem ~ 0.8rem 사이) */
+  padding: 0.5rem 0.8rem; 
+  
   box-sizing: border-box;
   transform-origin: top left;
   will-change: transform;
