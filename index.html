@@ -17,59 +17,55 @@
             --sat-color: #a5d8ff; --memo-bg: #2d2d1a; --text-main: #f8f9fa; --text-sub: #adb5bd;
             --input-bg: #2c2e33; --income-color: #ff8787; --expense-color: #74c0fc;
         }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Pretendard', sans-serif; background: var(--bg-color); overflow: hidden; transition: 0.3s;
-    font-size: clamp(13px, 3.5vw, 16px); 
-        }
-        #app { display: flex; flex-direction: column; width: 100vw; height: 100vh; padding: 10px; box-sizing: border-box; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Pretendard', sans-serif; background: var(--bg-color); overflow: hidden; transition: 0.3s; }
+        #app { display: flex; flex-direction: column; width: 100vw; height: 100vh; padding: clamp(4px, 1.5vw, 10px); box-sizing: border-box; }
         
 .header { 
-    display: flex; 
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center; 
-    justify-content: space-between; 
-    margin-bottom: 5px; 
-    min-height: 50px; 
-    height: auto; /* 높이를 유동적으로 변경 */
-    padding: 0 5px;
+    margin-bottom: clamp(3px, 1vw, 5px);
+    height: clamp(36px, 6vw, 50px);
+    padding: 0 clamp(2px, 1vw, 5px);
     flex-shrink: 0; 
+    gap: clamp(4px, 1.5vw, 10px);
 }
 
 .header-left { 
     display: flex; 
     align-items: center; 
-    gap: clamp(5px, 2vw, 10px); /* 간격도 화면에 맞게 조절 */
-    flex: 1; /* 왼쪽 공간 차지 */
+    gap: clamp(4px, 1.5vw, 10px);
 }
 
 .header-right { 
     display: flex; 
     align-items: center; 
-    gap: clamp(5px, 2vw, 10px); 
+    gap: clamp(4px, 1.5vw, 10px);
     justify-content: flex-end; 
-    flex: 1; /* 오른쪽 공간 차지 */
 }
 
-/* 중앙 타이틀 영역 최적화 */
+/* 중앙 타이틀 영역 */
 .nav-center { 
     display: flex; 
     align-items: center; 
-    gap: 5px; 
+    gap: clamp(3px, 1vw, 8px);
     background: var(--container-bg); 
-    padding: 5px clamp(10px, 3vw, 15px); 
+    padding: clamp(3px, 0.8vw, 5px) clamp(6px, 2vw, 15px);
     border-radius: 30px; 
     box-shadow: 0 4px 10px rgba(0,0,0,0.03); 
-    flex-shrink: 0; /* 중앙 영역이 찌그러지지 않게 보호 */
-    z-index: 10;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
         .logo-placeholder { 
-            width: 80px; /* 로고 너비 살짝 조정 */
-            height: 35px; 
+            width: clamp(48px, 8vw, 80px);
+            height: clamp(24px, 4vw, 35px); 
             background: #eee; 
             border-radius: 8px; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: 0.6rem; 
+            font-size: clamp(0.45rem, 1.2vw, 0.6rem);
             color: #aaa; 
             border: 1px dashed #ccc; 
             flex-shrink: 0;
@@ -82,43 +78,42 @@
         .search-box input { 
             border: 2px solid #eee; 
             border-radius: 20px; 
-            padding: 6px 12px; 
-            width: 120px; 
-            font-size: 0.8rem; 
+            padding: clamp(3px, 0.8vw, 6px) clamp(6px, 1.5vw, 12px);
+            width: clamp(60px, 12vw, 120px);
+            font-size: clamp(0.6rem, 1.5vw, 0.8rem);
             outline: none; 
             background: var(--container-bg); 
             color: var(--text-main); 
         }
-        .nav-center { justify-self: center; display: flex; align-items: center; gap: 8px; background: var(--container-bg); padding: 5px 15px; border-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .nav-btn { cursor: pointer; border: none; background: var(--input-bg); color: var(--text-main); border-radius: 50%; width: 28px; height: 28px; font-weight: bold; }
-        select { border: none; font-size: 1rem; font-weight: bold; background: transparent; color: var(--text-main); outline: none; }
+        .nav-btn { cursor: pointer; border: none; background: var(--input-bg); color: var(--text-main); border-radius: 50%; width: clamp(20px, 3.5vw, 28px); height: clamp(20px, 3.5vw, 28px); font-weight: bold; font-size: clamp(0.6rem, 1.5vw, 1rem); display: flex; align-items: center; justify-content: center; padding: 0; }
+        select { border: none; font-size: clamp(0.7rem, 1.8vw, 1rem); font-weight: bold; background: transparent; color: var(--text-main); outline: none; }
 
-        .grid-main { display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: 1fr 25px repeat(6, 1fr) 1fr; flex-grow: 1; gap: 5px; padding: 10px; background: var(--container-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); overflow: hidden; }
-        .cell { border: 1px solid var(--border-color); border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; background: var(--container-bg); position: relative; }
+        .grid-main { display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: 1fr 25px repeat(6, 1fr) 1fr; flex-grow: 1; gap: clamp(2px, 0.5vw, 5px); padding: clamp(4px, 1vw, 10px); background: var(--container-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); overflow: hidden; }
+        .cell { border: 1px solid var(--border-color); border-radius: clamp(6px, 1.2vw, 12px); display: flex; flex-direction: column; overflow: hidden; background: var(--container-bg); position: relative; }
         .split-memo { background: var(--memo-bg); border: 1px dashed #ffd43b; }
-        .split-memo textarea { width: 100%; height: 100%; border: none; background: transparent; resize: none; padding: 5px; font-size: 0.7rem; color: var(--text-main); box-sizing: border-box; outline: none; }
-        .day-label { text-align: center; font-weight: bold; font-size: 0.7rem; line-height: 25px; color: var(--text-sub); background: var(--input-bg); }
+        .split-memo textarea { width: 100%; height: 100%; border: none; background: transparent; resize: none; padding: 3px; font-size: clamp(0.45rem, 1vw, 0.7rem); color: var(--text-main); box-sizing: border-box; outline: none; }
+        .day-label { text-align: center; font-weight: bold; font-size: clamp(0.45rem, 1.1vw, 0.7rem); line-height: 25px; color: var(--text-sub); background: var(--input-bg); }
         .sat { color: var(--sat-color) !important; } .sun { color: var(--holiday-color) !important; }
 
-        .date-top-row { display: flex; justify-content: space-between; padding: 2px 6px; cursor: pointer; height: 36px; align-items: flex-start; flex-shrink: 0; }
-        .left-info-stack { display: grid; grid-template-columns: auto 1fr; column-gap: 4px; flex: 1; line-height: 1.0; overflow: hidden; }
-        .date-num { grid-row: 1/4; grid-column: 1; font-weight: bold; font-size: 1.1rem; line-height: 0.9; color: var(--text-main); padding-top: 2px; }
+        .date-top-row { display: flex; justify-content: space-between; padding: clamp(1px, 0.3vw, 2px) clamp(2px, 0.6vw, 6px); cursor: pointer; height: clamp(22px, 4.5vw, 36px); align-items: flex-start; flex-shrink: 0; }
+        .left-info-stack { display: grid; grid-template-columns: auto 1fr; column-gap: 3px; flex: 1; line-height: 1.0; overflow: hidden; }
+        .date-num { grid-row: 1/4; grid-column: 1; font-weight: bold; font-size: clamp(0.6rem, 1.4vw, 1.1rem); line-height: 0.9; color: var(--text-main); padding-top: 2px; }
         
-        .line-1, .line-2, .line-3 { grid-column: 2; font-size: 0.6rem; font-weight: bold; line-height: 1.0; white-space: nowrap; }
+        .line-1, .line-2, .line-3 { grid-column: 2; font-size: clamp(0.38rem, 0.85vw, 0.6rem); font-weight: bold; line-height: 1.0; white-space: nowrap; }
         .txt-red { color: var(--holiday-color) !important; } .txt-green { color: var(--season-color) !important; } .txt-black { color: var(--normal-day-color); }
         
-        .money-info-group { display: flex; flex-direction: column; text-align: right; width: 65px; font-size: 0.6rem; line-height: 1.0; color: var(--text-main); }
+        .money-info-group { display: flex; flex-direction: column; text-align: right; width: clamp(38px, 7vw, 65px); font-size: clamp(0.38rem, 0.85vw, 0.6rem); line-height: 1.0; color: var(--text-main); }
         .in-s { color: var(--income-color); font-weight: bold; } .out-s { color: var(--expense-color); font-weight: bold; } 
         .bal-s { font-weight: 900; border-top: 0.5px solid var(--border-color); margin-top: 1px; color: var(--text-main); }
 
         .cell-memos { flex-grow: 1; display: flex; flex-direction: column; padding: 1px 2px 2px 2px; gap: 1px; overflow: hidden; }
-        .cell-memos textarea { flex: 1; border: none; background: var(--input-bg); color: var(--text-main); border-radius: 5px; padding: 2px 4px; font-size: 0.75rem; resize: none; line-height: 1.1; outline: none; scrollbar-width: none; }
+        .cell-memos textarea { flex: 1; border: none; background: var(--input-bg); color: var(--text-main); border-radius: 4px; padding: 1px 3px; font-size: clamp(0.45rem, 1vw, 0.75rem); resize: none; line-height: 1.1; outline: none; scrollbar-width: none; }
         
-        .week-cell { background: var(--input-bg); padding: 4px; box-sizing: border-box; }
-        .week-box { height: 48.5%; border: 1px solid var(--border-color); border-radius: 8px; background: var(--container-bg); margin-bottom: 3%; padding: 4px; display: flex; flex-direction: column; overflow: hidden; box-sizing: border-box; }
+        .week-cell { background: var(--input-bg); padding: clamp(2px, 0.5vw, 4px); box-sizing: border-box; }
+        .week-box { height: 48.5%; border: 1px solid var(--border-color); border-radius: 8px; background: var(--container-bg); margin-bottom: 3%; padding: clamp(2px, 0.5vw, 4px); display: flex; flex-direction: column; overflow: hidden; box-sizing: border-box; }
         .week-box:last-child { margin-bottom: 0; }
-        .week-title { font-size: 0.6rem; color: #ccc; font-weight: bold; margin-bottom: 2px; flex-shrink: 0; }
-        .week-text { flex-grow: 1; font-size: 0.7rem; color: #888; outline: none; overflow-y: auto; white-space: pre-wrap; word-break: break-all; scrollbar-width: none; }
+        .week-title { font-size: clamp(0.38rem, 0.85vw, 0.6rem); color: #ccc; font-weight: bold; margin-bottom: 2px; flex-shrink: 0; }
+        .week-text { flex-grow: 1; font-size: clamp(0.42rem, 0.95vw, 0.7rem); color: #888; outline: none; overflow-y: auto; white-space: pre-wrap; word-break: break-all; scrollbar-width: none; }
 
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 5000; }
         .modal-content { background: var(--container-bg); color: var(--text-main); padding: 20px; border-radius: 20px; width: 90%; max-width: 320px; box-shadow: 0 15px 50px rgba(0,0,0,0.2); box-sizing: border-box; }
@@ -133,7 +128,7 @@
         <div class="header-left"><div class="logo-placeholder">LOGOOOOO</div><div class="search-box"><input type="text" id="searchInput" placeholder="검색..." onkeyup="searchMemos()"><div id="search-res"></div></div></div>
         <div class="nav-center"><button class="nav-btn" onclick="moveYear(-1)">«</button><button class="nav-btn" onclick="moveMonth(-1)">‹</button><div class="current-view"><select id="yearSelect" onchange="jump()"></select>년 <select id="monthSelect" onchange="jump()"></select>월</div><button class="nav-btn" onclick="moveMonth(1)">›</button><button class="nav-btn" onclick="moveYear(1)">»</button></div>
         <div class="header-right">
-            <div onclick="openSettings()" style="cursor:pointer; color:var(--text-sub);"><svg width="24" height="24" viewBox="0 0 16 16" fill="currentColor"><path d="M9.405 1.05c-.413-.957-1.712-.957-2.126 0l-.428.992c-.22.508-.816.712-1.284.462l-.993-.532c-.93-.498-2.03.206-1.97 1.258l.064 1.09c.027.464-.313.916-.78 1.026l-1.094.258c-1.02.24-1.298 1.54-.44 2.213l.868.68c.371.292.472.812.228 1.22l-.568.947c-.544.908.204 2.062 1.233 1.956l1.091-.112c.468-.048.913.313 1.024.781l.259 1.094c.24 1.02 1.54 1.298 2.213.44l.68-.868c.292-.371.812-.472 1.22-.228l.947.568c.908.544 2.062-.204 1.956-1.233zM8 4.75a3.25 3.25 0 1 1 0 6.5 3.25 3.25 0 0 1 0-6.5z"/></svg></div>
+            <div onclick="openSettings()" style="cursor:pointer; color:var(--text-sub);"><svg width="clamp(16px,3vw,24px)" height="clamp(16px,3vw,24px)" style="width:clamp(16px,3vw,24px);height:clamp(16px,3vw,24px)" viewBox="0 0 16 16" fill="currentColor"><path d="M9.405 1.05c-.413-.957-1.712-.957-2.126 0l-.428.992c-.22.508-.816.712-1.284.462l-.993-.532c-.93-.498-2.03.206-1.97 1.258l.064 1.09c.027.464-.313.916-.78 1.026l-1.094.258c-1.02.24-1.298 1.54-.44 2.213l.868.68c.371.292.472.812.228 1.22l-.568.947c-.544.908.204 2.062 1.233 1.956l1.091-.112c.468-.048.913.313 1.024.781l.259 1.094c.24 1.02 1.54 1.298 2.213.44l.68-.868c.292-.371.812-.472 1.22-.228l.947.568c.908.544 2.062-.204 1.956-1.233zM8 4.75a3.25 3.25 0 1 1 0 6.5 3.25 3.25 0 0 1 0-6.5z"/></svg></div>
         </div>
     </div>
     <div class="grid-main" id="mainGrid"></div>
