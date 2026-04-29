@@ -21,12 +21,12 @@ html {
   font-size: 1.0vmin; /* 기본 (데스크탑) */
 }
 @media (max-width: 768px) {
-  html { font-size: 0.3vmin; } /* 모바일 세로 */
+  html { font-size: 0.1vmin; } /* 모바일 세로 */
 }
 @media (max-height: 500px) {
-  html { font-size: 0.3vmin; } /* 모바일 가로 */
+  html { font-size: 0.1vmin; } /* 모바일 가로 */
 }
-
+ 
 body {
   margin: 0;
   padding: 0;
@@ -36,7 +36,7 @@ body {
   overflow-y: auto;
   touch-action: pan-x pan-y;
 }
-
+ 
 #app {
   display: flex;
   flex-direction: column;
@@ -58,14 +58,14 @@ body {
     padding: 0 clamp(2px, 0.8vw, 6px);
     flex-shrink: 0; 
 }
-
+ 
 .header-left { 
     display: flex; 
     align-items: center; 
     gap: clamp(3px, 1.2vw, 8px);
     flex: 1;
 }
-
+ 
 .header-right { 
     display: flex; 
     align-items: center; 
@@ -73,7 +73,7 @@ body {
     justify-content: flex-end; 
     flex: 1;
 }
-
+ 
 /* 중앙 타이틀 영역 */
 .nav-center { 
     display: flex; 
@@ -86,7 +86,7 @@ body {
     flex-shrink: 0;
     z-index: 10;
 }
-
+ 
         .logo-placeholder { 
             width: clamp(44px, 8vw, 76px);
             height: clamp(20px, 4vh, 32px);
@@ -100,11 +100,11 @@ body {
             border: 1px dashed #ccc; 
             flex-shrink: 0;
         }
-
+ 
         .search-box { 
             position: relative; 
         }
-
+ 
         .search-box input { 
             border: 2px solid #eee; 
             border-radius: 20px; 
@@ -118,19 +118,19 @@ body {
         .nav-center { justify-self: center; display: flex; align-items: center; gap: clamp(3px, 0.8vw, 8px); background: var(--container-bg); padding: clamp(2px, 0.5vh, 5px) clamp(8px, 2vw, 15px); border-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         .nav-btn { cursor: pointer; border: none; background: var(--input-bg); color: var(--text-main); border-radius: 50%; width: 2rem; height: 2rem; font-weight: bold; font-size: 1rem; }
         select { border: none; font-size: 1rem; font-weight: bold; background: transparent; color: var(--text-main); outline: none; }
-
+ 
 .grid-main {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   /* grid-template-rows는 JS에서 5주/6주에 따라 동적으로 설정 */
-
+ 
   flex: 1;
   gap: clamp(0.15rem, 0.4vh, 0.45rem);
   padding: clamp(0.2rem, 0.5vh, 0.6rem);
-
+ 
   background: var(--container-bg);
   border-radius: clamp(0.6rem, 1.5vw, 1.4rem);
-
+ 
   overflow: visible;
 }
         .cell { border: 1px solid var(--border-color); border-radius: clamp(6px, 1.2vw, 12px); display: flex; flex-direction: column; overflow: hidden; background: var(--container-bg); position: relative; }
@@ -139,7 +139,7 @@ body {
         .day-label { text-align: center; font-weight: bold; font-size: 0.9rem; line-height: clamp(18px, 3.5vw, 26px); color: var(--text-sub); background: var(--input-bg); }
         .day-label.week-col { color: var(--season-color) !important; }
         .sat { color: var(--sat-color) !important; } .sun { color: var(--holiday-color) !important; }
-
+ 
         .date-top-row { display: flex; justify-content: space-between; padding: 0.2rem 0.4rem; cursor: pointer; height: auto; min-height: 0; align-items: flex-start; flex-shrink: 0; overflow: hidden; }
         .left-info-stack { display: grid; grid-template-columns: auto 1fr; column-gap: 0.25rem; flex: 1; line-height: 1.0; min-width: 0; overflow: hidden; }
         .date-num { grid-row: 1/4; grid-column: 1; font-weight: bold; font-size: 1.1rem; line-height: 1; color: var(--text-main); padding-top: 1px; }
@@ -150,7 +150,7 @@ body {
         .money-info-group { display: flex; flex-direction: column; text-align: right; width: 4rem; font-size: 0.68rem; line-height: 1.15; color: var(--text-main); flex-shrink: 0; margin-left: 0.15rem; }
         .in-s { color: var(--income-color); font-weight: bold; } .out-s { color: var(--expense-color); font-weight: bold; } 
         .bal-s { font-weight: 900; color: var(--text-main); }
-
+ 
         .cell-memos { flex-grow: 1; display: flex; flex-direction: column; padding: clamp(1px, 0.3vw, 2px); gap: 1px; overflow: hidden; }
         .cell-memos textarea { flex: 1; border: none; background: var(--input-bg); color: var(--text-main); border-radius: 0.4rem; padding: 0.15rem 0.25rem; font-size: 0.78rem; resize: none; line-height: 1.1; outline: none; scrollbar-width: none; }
         /* 포커스 중인 textarea 오른쪽 하단 보라색 점 */
@@ -167,14 +167,14 @@ body {
         .week-box:last-child { margin-bottom: 0; }
         .week-title { display: none; }
         .week-text { flex-grow: 1; font-size: 0.72rem; color: #888; outline: none; overflow-y: auto; white-space: pre-wrap; word-break: break-all; scrollbar-width: none; }
-
+ 
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 5000; }
         .modal-content { background: var(--container-bg); color: var(--text-main); padding: clamp(12px, 3vw, 22px); border-radius: 20px; width: 90%; max-width: 340px; box-shadow: 0 15px 50px rgba(0,0,0,0.2); box-sizing: border-box; font-size: clamp(0.75rem, 2vw, 1rem); }
         .confirm-btn { width: 100%; border: none; background: #d3f9d8; color: #2b8a3e; padding: clamp(10px, 2.5vw, 16px); border-radius: 12px; font-weight: bold; cursor: pointer; font-size: clamp(0.8rem, 2vw, 1rem); }
         #search-res { position: absolute; top: clamp(36px, 7vw, 54px); left: 0; width: clamp(180px, 30vw, 260px); max-height: 300px; background: var(--container-bg); border-radius: 15px; border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 2000; overflow-y: auto; display: none; scrollbar-width: none; }
     </style>
 </head>
-
+ 
 <body>
 <div id="app">
     <div class="header">
@@ -202,21 +202,21 @@ body {
         <button onclick="closeModal()" style="width:100%; border:none; background:none; color:#aaa; font-size:0.8rem; margin-top:15px; cursor:pointer;">닫기</button>
     </div>
 </div>
-
+ 
 <div id="settingsModal" class="modal" onclick="if(event.target==this) this.style.display='none'">
     <div class="modal-content">
         <div style="font-weight:bold; text-align:center; margin-bottom:20px;">설정</div>
         <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span>야간 모드</span><button onclick="toggleDark()" id="darkBtn" style="padding:5px 10px; border-radius:8px; border:1px solid #ccc;">OFF</button></div>
         <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span>시작 요일</span><button onclick="toggleStartDay()" id="startDayBtn" style="padding:5px 10px; border-radius:8px; border:1px solid #ccc;">월요일</button></div>
-
-
+ 
+ 
 <div style="display:flex; justify-content:space-between; align-items:center;"><span>데이터 관리</span>
 <div><button onclick="exportData()" style="padding:5px 10px; font-size:0.7rem; border-radius:5px; border:1px solid #ccc;">백업</button><button onclick="document.getElementById('importFile').click()" style="padding:5px 10px; font-size:0.7rem; border-radius:5px; border:1px solid #ccc;">복원</button></div></div>
         <input type="file" id="importFile" style="display:none" onchange="importData(this)">
         <button class="confirm-btn" style="margin-top:20px; background:#eee; color:#333;" onclick="document.getElementById('settingsModal').style.display='none'">닫기</button>
     </div>
 </div>
-
+ 
 <script>
     const LUNAR_DATA = { 
         2024:{seol:"2-10", budda:"5-15", chuseok:"9-17"}, 2025:{seol:"1-29", budda:"5-5", chuseok:"10-6"}, 
@@ -224,13 +224,13 @@ body {
         2028:{seol:"1-26", budda:"5-2", chuseok:"10-3"}, 2029:{seol:"2-13", budda:"5-20", chuseok:"9-22"}, 
         2030:{seol:"2-2", budda:"5-9", chuseok:"9-12"} 
     };
-
+ 
     function getHolidays(y, m, d) {
         let res = null;
         const RED = { "1-1":"신정","3-1":"삼일절","5-5":"어린이날","6-6":"현충일","8-15":"광복절","10-3":"개천절","10-9":"한글날","12-25":"성탄절" };
         const BLACK = { "5-1":"근로자의날","5-8":"어버이날","5-15":"스승의날","10-1":"국군의날" };
         const dt = new Date(y, m-1, d); const day = dt.getDay(); 
-
+ 
         const lunar = LUNAR_DATA[y];
         if(lunar) {
             if(`${m}-${d}`===lunar.budda) res={t:"석가탄신일",c:"txt-red"};
@@ -245,7 +245,7 @@ body {
             const isChuseokSun = [new Date(y,cm-1,cd-1).getDay(), new Date(y,cm-1,cd).getDay(), new Date(y,cm-1,cd+1).getDay()].includes(0);
             if(isChuseokSun && m===cm && d===cd+2) res={t:"대체공휴일",c:"txt-red"};
         }
-
+ 
         // 고정일 공휴일 국경일 대체 (삼일절, 광복절, 개천절, 한글날, 어린이날, 성탄절)
         if(!res && RED[`${m}-${d}`]) res={t:RED[`${m}-${d}`],c:"txt-red"};
         const replaceList = ["3-1","5-5","8-15","10-3","10-9","12-25"];
@@ -254,35 +254,35 @@ body {
             if(oDay===0 && m===mm && d===dd+1) res={t:"대체공휴일",c:"txt-red"}; // 일요일 -> 월요일
             if(oDay===6 && m===mm && d===dd+2) res={t:"대체공휴일",c:"txt-red"}; // 토요일 -> 월요일
         });
-
+ 
         // 부처님오신날 대체공휴일 (토/일이면 월요일)
         if(lunar && !res) {
             const [bm,bd]=lunar.budda.split('-').map(Number); const bDay=new Date(y,bm-1,bd).getDay();
             if(m===bm && ((bDay===0 && d===bd+1)||(bDay===6 && d===bd+2))) res={t:"대체공휴일",c:"txt-red"};
         }
-
+ 
         if(!res && BLACK[`${m}-${d}`]) res={t:BLACK[`${m}-${d}`],c:"txt-black"};
         return res;
     }
-
+ 
     function get24Seasons(m, d) {
         const s = { "1-5":"소한","1-20":"대한","2-4":"입춘","2-19":"우수","3-5":"경칩","3-20":"춘분","4-5":"청명","4-20":"곡우","5-5":"입하","5-21":"소만","6-5":"망종","6-21":"하지","7-7":"소서","7-22":"대서","8-7":"입추","8-23":"처서","9-7":"백로","9-23":"추분","10-8":"한로","10-23":"상강","11-7":"입동","11-22":"소설","12-7":"대설","12-22":"동지" };
         return s[`${m}-${d}`] ? {t:s[`${m}-${d}`], c:"txt-green"} : null;
     }
-
+ 
     // ── 핀치 줌 (두 손가락 확대/축소) ──────────────────────────
     (function() {
         const app = document.getElementById('app');
         let scale = 1, minScale = 0.4, maxScale = 3;
         let startDist = 0, startScale = 1;
         let isPinching = false;
-
+ 
         function getDist(t) {
             const dx = t[0].clientX - t[1].clientX;
             const dy = t[0].clientY - t[1].clientY;
             return Math.sqrt(dx*dx + dy*dy);
         }
-
+ 
         document.addEventListener('touchstart', function(e) {
             if (e.touches.length === 2) {
                 isPinching = true;
@@ -291,7 +291,7 @@ body {
                 e.preventDefault();
             }
         }, { passive: false });
-
+ 
         document.addEventListener('touchmove', function(e) {
             if (isPinching && e.touches.length === 2) {
                 const dist = getDist(e.touches);
@@ -302,7 +302,7 @@ body {
                 e.preventDefault();
             }
         }, { passive: false });
-
+ 
         document.addEventListener('touchend', function(e) {
             if (e.touches.length < 2) {
                 isPinching = false;
@@ -310,12 +310,12 @@ body {
         });
     })();
     // ──────────────────────────────────────────────────────────
-
+ 
     let curr = new Date();
     const dbKey = "pastel_eternal_final_v32";
     let db = JSON.parse(localStorage.getItem(dbKey)) || { isDark: false, startDaySun: false };
     let activeKey = "";
-
+ 
     function save() { localStorage.setItem(dbKey, JSON.stringify(db)); }
     window.onload = function() {
         if(db.isDark) document.body.classList.add('dark-mode');
@@ -323,70 +323,70 @@ body {
         document.getElementById('startDayBtn').innerText = db.startDaySun ? "일요일" : "월요일";
         init();
     };
-
+ 
     
-
+ 
     function init() { renderSelectors(); renderCalendar(); }
     function toggleDark() { db.isDark = !db.isDark; document.body.classList.toggle('dark-mode', db.isDark); document.getElementById('darkBtn').innerText = db.isDark ? "ON" : "OFF"; save(); }
     function toggleStartDay() { db.startDaySun = !db.startDaySun; document.getElementById('startDayBtn').innerText = db.startDaySun ? "일요일" : "월요일"; save(); init(); }
     function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
-
+ 
     function jump() { 
         curr = new Date(document.getElementById('yearSelect').value, document.getElementById('monthSelect').value-1, 1); 
         renderCalendar(); 
     }
     function moveMonth(v) { curr.setMonth(curr.getMonth() + v); init(); }
     function moveYear(v) { curr.setFullYear(curr.getFullYear() + v); init(); }
-
-
+ 
+ 
     function exportData() {
         const blob = new Blob([JSON.stringify(db)], {type:'application/json'});
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = '가계부백업.json'; a.click();
     }
-
+ 
     function importData(input) {
         const reader = new FileReader();
         reader.onload = (e) => { try { db = JSON.parse(e.target.result); save(); location.reload(); } catch(e){alert("파일이 올바르지 않습니다.");} };
         reader.readAsText(input.files[0]);
     }
-
+ 
     function renderSelectors() {
         const yS = document.getElementById('yearSelect'), mS = document.getElementById('monthSelect');
         yS.innerHTML = ''; mS.innerHTML = '';
         for(let i=2024; i<=2035; i++){ let o = new Option(i, i); if(i===curr.getFullYear()) o.selected=true; yS.add(o); }
         for(let i=1; i<=12; i++){ let o = new Option(i, i); if(i===curr.getMonth()+1) o.selected=true; mS.add(o); }
     }
-
+ 
     function renderCalendar() {
         const grid = document.getElementById('mainGrid'); grid.innerHTML = '';
         const y = curr.getFullYear(), m = curr.getMonth();
         const lastD = new Date(y, m+1, 0).getDate();
         const firstD = new Date(y, m, 1).getDay();
         let startIdx = db.startDaySun ? firstD : (firstD===0?6:firstD-1);
-
+ 
         // 5주로 끝나는지 6주 필요한지 계산
         const totalCells = startIdx + lastD;
         const numWeeks = Math.ceil(totalCells / 7);  // 5 or 6
-
+ 
         // grid rows 동적 설정: 상단메모 | 요일 | N주 | 하단메모
         grid.style.gridTemplateRows = `1fr clamp(1rem,2.2vh,1.6rem) repeat(${numWeeks},1fr) 1fr`;
-
+ 
         // 상단 메모
         for(let i=0; i<8; i++){ const k=`fixed-top-${i}`; const c=document.createElement('div'); c.className="cell split-memo"; c.innerHTML=`<textarea onblur="db['${k}']=this.value; save()">${db[k]||''}</textarea>`; grid.appendChild(c); }
-
+ 
         // 요일 헤더
         const days = db.startDaySun ? ['주차','일','월','화','수','목','금','토'] : ['주차','월','화','수','목','금','토','일'];
         days.forEach(d => { const c=document.createElement('div'); c.className=`day-label ${d==='토'?'sat':(d==='일'?'sun':(d==='주차'?'week-col':''))}`; c.innerText=d; grid.appendChild(c); });
-
+ 
         // 이전달 정보
         const prevMonthLastD = new Date(y, m, 0).getDate();
         const prevY = m===0 ? y-1 : y, prevM = m===0 ? 12 : m;
         const nextY = m===11 ? y+1 : y, nextM = m===11 ? 1 : m+2;
-
+ 
         let dateCount=1, runningBal=0, lastRec=0, nextDateCount=1;
         for(let d=1; d<=lastD; d++) if(db[`${y}-${m+1}-${d}`]?.entries?.length>0) lastRec=d;
-
+ 
         for(let w=0; w<numWeeks; w++) {
             // 주차 셀 — 마지막 주는 항상 "1주 계획/평가"
             const isLast = (w === numWeeks - 1);
@@ -394,11 +394,11 @@ body {
             const weekCell=document.createElement('div'); weekCell.className="cell week-cell";
             weekCell.innerHTML=`<div class="week-box"><div class="week-title">${weekLabel} 계획</div><div class="week-text" contenteditable="true" onfocus="this.closest('.week-box').classList.add('editing')" onblur="this.closest('.week-box').classList.remove('editing'); saveWeek(${y},${m+1},${w},'plan',this)">${getWeekData(y,m+1,w,'plan')}</div></div><div class="week-box"><div class="week-title">${weekLabel} 평가</div><div class="week-text" contenteditable="true" onfocus="this.closest('.week-box').classList.add('editing')" onblur="this.closest('.week-box').classList.remove('editing'); saveWeek(${y},${m+1},${w},'eval',this)">${getWeekData(y,m+1,w,'eval')}</div></div>`;
             grid.appendChild(weekCell);
-
+ 
             for(let d=0; d<7; d++) {
                 const c=document.createElement('div');
                 const idx = w*7+d;
-
+ 
                 if(idx < startIdx) {
                     // 이전달 날짜
                     const prevDay = prevMonthLastD - (startIdx - 1 - idx);
@@ -429,7 +429,7 @@ body {
                 grid.appendChild(c);
             }
         }
-
+ 
         // 하단 메모
         for(let i=0; i<8; i++){ const k=`fixed-bot-${i}`; const c=document.createElement('div'); c.className="cell split-memo"; c.innerHTML=`<textarea onblur="db['${k}']=this.value; save()">${db[k]||''}</textarea>`; grid.appendChild(c); }
     }
@@ -476,8 +476,8 @@ body {
         if(!q){res.style.display='none'; return;} res.innerHTML=''; res.style.display='block';
         Object.keys(db).forEach(k=>{ if(k.startsWith('fixed')||['isDark','startDaySun','alarmTime'].includes(k)) return; const d=db[k], c=typeof d==='object'?`${d.m1||''} ${d.m2||''} ${d.m3||''}`:d; if(c&&c.includes(q)){ const item=document.createElement('div'); item.className='res-item'; let p=k.split('-'); item.innerHTML=`<strong>${k}</strong><br><small>${c.substring(0,20)}</small>`; item.onclick=()=>{curr=new Date(p[0],p[1]-1,1); init(); res.style.display='none';}; res.appendChild(item); } });
     }
-
-
+ 
+ 
 </script>
 </body>
 </html>
