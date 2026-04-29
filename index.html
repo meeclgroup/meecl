@@ -131,6 +131,7 @@ body {
         .split-memo { background: var(--memo-bg); border: 1px dashed #ffd43b; }
         .split-memo textarea { width: 100%; height: 100%; border: none; background: transparent; resize: none; padding: clamp(2px, 0.5vw, 5px); font-size: clamp(0.5rem, 1vw, 0.75rem); color: var(--text-main); box-sizing: border-box; outline: none; }
         .day-label { text-align: center; font-weight: bold; font-size: clamp(0.5rem, 1vw, 0.75rem); line-height: clamp(18px, 3.5vw, 26px); color: var(--text-sub); background: var(--input-bg); }
+        .day-label.week-col { color: var(--season-color) !important; }
         .sat { color: var(--sat-color) !important; } .sun { color: var(--holiday-color) !important; }
 
         .date-top-row { display: flex; justify-content: space-between; padding: clamp(1px, 0.3vh, 3px) clamp(3px, 0.8vw, 7px); cursor: pointer; height: auto; min-height: 0; align-items: flex-start; flex-shrink: 0; overflow: hidden; }
@@ -146,6 +147,11 @@ body {
 
         .cell-memos { flex-grow: 1; display: flex; flex-direction: column; padding: clamp(1px, 0.3vw, 2px); gap: 1px; overflow: hidden; }
         .cell-memos textarea { flex: 1; border: none; background: var(--input-bg); color: var(--text-main); border-radius: clamp(3px, 0.6vw, 6px); padding: clamp(1px, 0.3vw, 3px) clamp(2px, 0.5vw, 4px); font-size: clamp(0.5rem, 1vw, 0.78rem); resize: none; line-height: 1.1; outline: none; scrollbar-width: none; }
+        /* 포커스 중인 textarea 오른쪽 하단 보라색 점 */
+        .cell { position: relative; }
+        .cell-memos textarea:focus { background: #f3f0ff; }
+        .cell-memos textarea:focus::after { content:''; display:block; }
+        .cell:has(textarea:focus)::after { content: ''; position: absolute; bottom: 4px; right: 4px; width: 6px; height: 6px; border-radius: 50%; background: #9b59b6; pointer-events: none; z-index: 10; }
         /* 이전달/다음달 날짜 — 흐리게, 메모 입력 비활성 */
         .cell.other-month { opacity: 0.32; background: var(--input-bg); }
         .cell.other-month .cell-memos textarea { pointer-events: none; background: transparent; }
@@ -153,8 +159,7 @@ body {
         .week-cell { background: var(--input-bg); padding: clamp(2px, 0.5vw, 4px); box-sizing: border-box; }
         .week-box { height: 48.5%; border: 1px solid var(--border-color); border-radius: clamp(4px, 0.8vw, 8px); background: var(--container-bg); margin-bottom: 3%; padding: clamp(2px, 0.5vw, 4px); display: flex; flex-direction: column; overflow: hidden; box-sizing: border-box; }
         .week-box:last-child { margin-bottom: 0; }
-        .week-title { font-size: clamp(0.42rem, 0.85vw, 0.65rem); color: #ccc; font-weight: bold; margin-bottom: 2px; flex-shrink: 0; transition: all 0.15s; }
-        .week-box.editing .week-title { display: none; }
+        .week-title { display: none; }
         .week-text { flex-grow: 1; font-size: clamp(0.48rem, 0.95vw, 0.72rem); color: #888; outline: none; overflow-y: auto; white-space: pre-wrap; word-break: break-all; scrollbar-width: none; }
 
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 5000; }
@@ -366,7 +371,7 @@ body {
 
         // 요일 헤더
         const days = db.startDaySun ? ['주차','일','월','화','수','목','금','토'] : ['주차','월','화','수','목','금','토','일'];
-        days.forEach(d => { const c=document.createElement('div'); c.className=`day-label ${d==='토'?'sat':(d==='일'||d==='주차'?'sun':'')}`; c.innerText=d; grid.appendChild(c); });
+        days.forEach(d => { const c=document.createElement('div'); c.className=`day-label ${d==='토'?'sat':(d==='일'?'sun':(d==='주차'?'week-col':''))}`; c.innerText=d; grid.appendChild(c); });
 
         // 이전달 정보
         const prevMonthLastD = new Date(y, m, 0).getDate();
@@ -377,9 +382,11 @@ body {
         for(let d=1; d<=lastD; d++) if(db[`${y}-${m+1}-${d}`]?.entries?.length>0) lastRec=d;
 
         for(let w=0; w<numWeeks; w++) {
-            // 주차 셀
+            // 주차 셀 — 마지막 주는 항상 "1주 계획/평가"
+            const isLast = (w === numWeeks - 1);
+            const weekLabel = isLast ? '1주' : `${w+1}주`;
             const weekCell=document.createElement('div'); weekCell.className="cell week-cell";
-            weekCell.innerHTML=`<div class="week-box"><div class="week-title">${w+1}주 계획</div><div class="week-text" contenteditable="true" onfocus="this.closest('.week-box').classList.add('editing')" onblur="this.closest('.week-box').classList.remove('editing'); saveWeek(${y},${m+1},${w},'plan',this)">${getWeekData(y,m+1,w,'plan')}</div></div><div class="week-box"><div class="week-title">${w+1}주 평가</div><div class="week-text" contenteditable="true" onfocus="this.closest('.week-box').classList.add('editing')" onblur="this.closest('.week-box').classList.remove('editing'); saveWeek(${y},${m+1},${w},'eval',this)">${getWeekData(y,m+1,w,'eval')}</div></div>`;
+            weekCell.innerHTML=`<div class="week-box"><div class="week-title">${weekLabel} 계획</div><div class="week-text" contenteditable="true" onfocus="this.closest('.week-box').classList.add('editing')" onblur="this.closest('.week-box').classList.remove('editing'); saveWeek(${y},${m+1},${w},'plan',this)">${getWeekData(y,m+1,w,'plan')}</div></div><div class="week-box"><div class="week-title">${weekLabel} 평가</div><div class="week-text" contenteditable="true" onfocus="this.closest('.week-box').classList.add('editing')" onblur="this.closest('.week-box').classList.remove('editing'); saveWeek(${y},${m+1},${w},'eval',this)">${getWeekData(y,m+1,w,'eval')}</div></div>`;
             grid.appendChild(weekCell);
 
             for(let d=0; d<7; d++) {
@@ -420,8 +427,35 @@ body {
         // 하단 메모
         for(let i=0; i<8; i++){ const k=`fixed-bot-${i}`; const c=document.createElement('div'); c.className="cell split-memo"; c.innerHTML=`<textarea onblur="db['${k}']=this.value; save()">${db[k]||''}</textarea>`; grid.appendChild(c); }
     }
-    function getWeekData(y,m,w,t){ if(w===0){let pM=m-1,pY=y; if(pM===0){pM=12;pY--;} if(db[`${pY}-${pM}-w5-${t}`]) return db[`${pY}-${pM}-w5-${t}`];} return db[`${y}-${m}-w${w}-${t}`]||""; }
-    function saveWeek(y,m,w,t,el){ db[`${y}-${m}-w${w}-${t}`]=el.innerText; if(w===5){let nM=Number(m)+1,nY=y; if(nM>12){nM=1;nY++;} db[`${nY}-${nM}-w0-${t}`]=el.innerText;} save(); }
+    function getNumWeeks(y, m) {
+        const firstD = new Date(y, m-1, 1).getDay();
+        const lastD = new Date(y, m, 0).getDate();
+        const startIdx = db.startDaySun ? firstD : (firstD===0?6:firstD-1);
+        return Math.ceil((startIdx + lastD) / 7);
+    }
+    function getWeekData(y, m, w, t) {
+        // 첫째 주(w===0)는 이전달 마지막 주 데이터를 가져옴
+        if (w === 0) {
+            let pM = m-1, pY = y;
+            if (pM === 0) { pM = 12; pY--; }
+            const pLast = getNumWeeks(pY, pM) - 1;
+            const carried = db[`${pY}-${pM}-w${pLast}-${t}`];
+            if (carried) return carried;
+        }
+        return db[`${y}-${m}-w${w}-${t}`] || "";
+    }
+    function saveWeek(y, m, w, t, el) {
+        const text = el.innerText;
+        db[`${y}-${m}-w${w}-${t}`] = text;
+        // 마지막 주 저장 시 다음달 첫째 주(w0)에도 동기화
+        const thisLast = getNumWeeks(y, m) - 1;
+        if (w === thisLast) {
+            let nM = Number(m)+1, nY = y;
+            if (nM > 12) { nM = 1; nY++; }
+            db[`${nY}-${nM}-w0-${t}`] = text;
+        }
+        save();
+    }
     function upMemo(k,t,v){ if(!db[k])db[k]={entries:[],m1:'',m2:'',m3:''}; db[k][t]=v; save(); }
     function openModal(k){ activeKey=k; document.getElementById('modalTitle').innerText=k; document.getElementById('modal').style.display='flex'; renderHistory(); document.getElementById('inName').focus(); }
     function quickSave(){
