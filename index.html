@@ -140,14 +140,14 @@ body {
         .day-label.week-col { color: var(--season-color) !important; }
         .sat { color: var(--sat-color) !important; } .sun { color: var(--holiday-color) !important; }
  
-        .date-top-row { display: flex; flex-direction: column; padding: 0.15rem 0.3rem; cursor: pointer; height: auto; min-height: 0; flex-shrink: 0; overflow: hidden; }
-        .left-info-stack { display: flex; flex-direction: row; align-items: baseline; gap: 0.2rem; min-width: 0; overflow: hidden; flex-wrap: nowrap; }
-        .date-num { font-weight: bold; font-size: 1.1rem; line-height: 1; color: var(--text-main); flex-shrink: 0; }
+        .date-top-row { display: flex; flex-direction: row; padding: 0.15rem 0.3rem; cursor: pointer; height: auto; min-height: 0; align-items: flex-start; flex-shrink: 0; overflow: hidden; gap: 0.1rem; }
+        .left-info-stack { display: grid; grid-template-columns: auto 1fr; column-gap: 0.2rem; flex: 0 0 auto; line-height: 1.0; min-width: 0; }
+        .date-num { grid-row: 1/4; grid-column: 1; font-weight: bold; font-size: 1.1rem; line-height: 1; color: var(--text-main); flex-shrink: 0; }
         
-        .line-1, .line-2, .line-3 { font-size: 0.7rem; font-weight: bold; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex-shrink: 1; }
+        .line-1, .line-2, .line-3 { grid-column: 2; font-size: 0.7rem; font-weight: bold; line-height: 1.15; white-space: nowrap; min-width: 0; }
         .txt-red { color: var(--holiday-color) !important; } .txt-green { color: var(--season-color) !important; } .txt-black { color: var(--normal-day-color); }
         
-        .money-info-group { display: flex; flex-direction: row; gap: 0.2rem; font-size: 0.65rem; line-height: 1.3; color: var(--text-main); flex-wrap: nowrap; overflow: hidden; margin-top: 0.1rem; }
+        .money-info-group { display: flex; flex-direction: column; font-size: 0.65rem; line-height: 1.15; color: var(--text-main); flex-shrink: 0; text-align: left; }
         .in-s { color: var(--income-color); font-weight: bold; } .out-s { color: var(--expense-color); font-weight: bold; } 
         .bal-s { font-weight: 900; color: var(--text-main); }
  
@@ -415,7 +415,7 @@ body {
                     runningBal+=(tin-tout);
                     const h=getHolidays(y,m+1,dateCount), s=get24Seasons(m+1,dateCount);
                     let lines=[]; if(s)lines.push(s); if(h)lines.push(h);
-                    c.innerHTML=`<div class="date-top-row" onclick="openModal('${k}')"><div class="left-info-stack"><span class="date-num ${dI===0?'sun':(dI===6?'sat':'')}">${dateCount}</span>${lines.map((l,i)=>`<span class="line-${i+1} ${l.c}">${l.t}</span>`).join('')}</div>${dateCount<=lastRec?`<div class="money-info-group"><span class="in-s">+${tin.toLocaleString()}</span><span class="out-s">-${tout.toLocaleString()}</span><span class="bal-s">=${runningBal.toLocaleString()}</span></div>`:''}</div><div class="cell-memos"><textarea onblur="upMemo('${k}','m1',this.value)">${dayD.m1||''}</textarea><textarea onblur="upMemo('${k}','m2',this.value)">${dayD.m2||''}</textarea><textarea onblur="upMemo('${k}','m3',this.value)">${dayD.m3||''}</textarea></div>`;
+                    c.innerHTML=`<div class="date-top-row" onclick="openModal('${k}')"><div class="left-info-stack"><span class="date-num ${dI===0?'sun':(dI===6?'sat':'')}">${dateCount}</span>${lines.map((l,i)=>`<span class="line-${i+1} ${l.c}">${l.t}</span>`).join('')}</div><div class="money-info-group">${dateCount<=lastRec?`<span class="in-s">${tin.toLocaleString()}</span><span class="out-s">${tout.toLocaleString()}</span><span class="bal-s">${runningBal.toLocaleString()}</span>`:''}</div></div><div class="cell-memos"><textarea onblur="upMemo('${k}','m1',this.value)">${dayD.m1||''}</textarea><textarea onblur="upMemo('${k}','m2',this.value)">${dayD.m2||''}</textarea><textarea onblur="upMemo('${k}','m3',this.value)">${dayD.m3||''}</textarea></div>`;
                     dateCount++;
                 } else {
                     // 다음달 날짜
