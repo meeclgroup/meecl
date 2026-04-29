@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>파스텔 영구 가계부 - +32 완결판</title>
+    <style>
+        :root {
+            --bg-color: #fefcfd; --container-bg: #ffffff; --border-color: #f1f3f5;
+            --holiday-color: #ff6b6b; --season-color: #51cf66; --normal-day-color: #495057;
+            --sat-color: #74c0fc; --memo-bg: #fff9db; --text-main: #212529; --text-sub: #868e96;
+            --input-bg: #f8f9fa; --income-color: #ff6b6b; --expense-color: #4dabf7;
+        }
+        body.dark-mode {
+            --bg-color: #121212; --container-bg: #1e1e1e; --border-color: #333333;
+            --holiday-color: #ff8787; --season-color: #8ce99a; --normal-day-color: #adb5bd;
+            --sat-color: #a5d8ff; --memo-bg: #2d2d1a; --text-main: #f8f9fa; --text-sub: #adb5bd;
+            --input-bg: #2c2e33; --income-color: #ff8787; --expense-color: #74c0fc;
+        }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Pretendard', sans-serif; background: var(--bg-color); overflow: hidden; transition: 0.3s; }
+        #app { display: flex; flex-direction: column; width: 100vw; height: 100vh; padding: 10px; box-sizing: border-box; }
+        
+        .header { 
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center; 
+            margin-bottom: 5px; 
+            height: 50px; 
+            flex-shrink: 0; 
+        }
+
+        .header-left { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+        }
+
+        .header-right { display: flex; align-items: center; gap: 10px; justify-content: flex-end; }
+
+        .google-login-btn {
+            display: flex; align-items: center; gap: 6px;
+            padding: 5px 12px; border: 1.5px solid var(--border-color);
+            border-radius: 20px; background: var(--container-bg);
+            cursor: pointer; font-size: 0.75rem; font-weight: 600;
+            color: var(--text-main); white-space: nowrap;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .google-login-btn:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.12); border-color: #4285f4; }
+        .google-avatar { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border-color); }
+        .google-user-name { font-size: 0.75rem; font-weight: 600; color: var(--text-main); max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .logo-placeholder { 
+            width: 80px; /* 로고 너비 살짝 조정 */
+            height: 35px; 
+            background: #eee; 
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 0.6rem; 
+            color: #aaa; 
+            border: 1px dashed #ccc; 
+            flex-shrink: 0;
+        }
+
+        .search-box { 
+            position: relative; 
+        }
+
+        .search-box input { 
+            border: 2px solid #eee; 
+            border-radius: 20px; 
+            padding: 6px 12px; 
+            width: 120px; 
+            font-size: 0.8rem; 
+            outline: none; 
+            background: var(--container-bg); 
+            color: var(--text-main); 
+        }
+        .nav-center { justify-self: center; display: flex; align-items: center; gap: 8px; background: var(--container-bg); padding: 5px 15px; border-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .nav-btn { cursor: pointer; border: none; background: var(--input-bg); color: var(--text-main); border-radius: 50%; width: 28px; height: 28px; font-weight: bold; }
+        select { border: none; font-size: 1rem; font-weight: bold; background: transparent; color: var(--text-main); outline: none; }
+
+        .grid-main { display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: 1fr 25px repeat(6, 1fr) 1fr; flex-grow: 1; gap: 5px; padding: 10px; background: var(--container-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); overflow: hidden; }
+        .cell { border: 1px solid var(--border-color); border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; background: var(--container-bg); position: relative; }
+        .split-memo { background: var(--memo-bg); border: 1px dashed #ffd43b; }
+        .split-memo textarea { width: 100%; height: 100%; border: none; background: transparent; resize: none; padding: 5px; font-size: 0.7rem; color: var(--text-main); box-sizing: border-box; outline: none; }
+        .day-label { text-align: center; font-weight: bold; font-size: 0.7rem; line-height: 25px; color: var(--text-sub); background: var(--input-bg); }
+        .sat { color: var(--sat-color) !important; } .sun { color: var(--holiday-color) !important; }
+
+        .date-top-row { display: flex; justify-content: space-between; padding: 2px 6px; cursor: pointer; height: 36px; align-items: flex-start; flex-shrink: 0; }
+        .left-info-stack { display: grid; grid-template-columns: auto 1fr; column-gap: 4px; flex: 1; line-height: 1.0; overflow: hidden; }
+        .date-num { grid-row: 1/4; grid-column: 1; font-weight: bold; font-size: 1.1rem; line-height: 0.9; color: var(--text-main); padding-top: 2px; }
+        
+        .line-1, .line-2, .line-3 { grid-column: 2; font-size: 0.6rem; font-weight: bold; line-height: 1.0; white-space: nowrap; }
+        .txt-red { color: var(--holiday-color) !important; } .txt-green { color: var(--season-color) !important; } .txt-black { color: var(--normal-day-color); }
+        
+        .money-info-group { display: flex; flex-direction: column; text-align: right; width: 65px; font-size: 0.6rem; line-height: 1.0; color: var(--text-main); }
+        .in-s { color: var(--income-color); font-weight: bold; } .out-s { color: var(--expense-color); font-weight: bold; } 
+        .bal-s { font-weight: 900; border-top: 0.5px solid var(--border-color); margin-top: 1px; color: var(--text-main); }
+
+        .cell-memos { flex-grow: 1; display: flex; flex-direction: column; padding: 1px 2px 2px 2px; gap: 1px; overflow: hidden; }
+        .cell-memos textarea { flex: 1; border: none; background: var(--input-bg); color: var(--text-main); border-radius: 5px; padding: 2px 4px; font-size: 0.75rem; resize: none; line-height: 1.1; outline: none; scrollbar-width: none; }
+        
+        .week-cell { background: var(--input-bg); padding: 4px; box-sizing: border-box; }
+        .week-box { height: 48.5%; border: 1px solid var(--border-color); border-radius: 8px; background: var(--container-bg); margin-bottom: 3%; padding: 4px; display: flex; flex-direction: column; overflow: hidden; box-sizing: border-box; }
+        .week-box:last-child { margin-bottom: 0; }
+        .week-title { font-size: 0.6rem; color: #ccc; font-weight: bold; margin-bottom: 2px; flex-shrink: 0; }
+        .week-text { flex-grow: 1; font-size: 0.7rem; color: #888; outline: none; overflow-y: auto; white-space: pre-wrap; word-break: break-all; scrollbar-width: none; }
+
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 5000; }
+        .modal-content { background: var(--container-bg); color: var(--text-main); padding: 20px; border-radius: 20px; width: 90%; max-width: 320px; box-shadow: 0 15px 50px rgba(0,0,0,0.2); box-sizing: border-box; }
+        .confirm-btn { width: 100%; border: none; background: #d3f9d8; color: #2b8a3e; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        #search-res { position: absolute; top: 50px; left: 0; width: 250px; max-height: 300px; background: var(--container-bg); border-radius: 15px; border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 2000; overflow-y: auto; display: none; scrollbar-width: none; }
+    </style>
+    
+</head>
+<body>
+<div id="app">
+    <div class="header">
+        <div class="header-left"><div class="logo-placeholder">LOGOOOOO</div><div class="search-box"><input type="text" id="searchInput" placeholder="검색..." onkeyup="searchMemos()"><div id="search-res"></div></div></div>
+        <div class="nav-center"><button class="nav-btn" onclick="moveYear(-1)">«</button><button class="nav-btn" onclick="moveMonth(-1)">‹</button><div class="current-view"><select id="yearSelect" onchange="jump()"></select>년 <select id="monthSelect" onchange="jump()"></select>월</div><button class="nav-btn" onclick="moveMonth(1)">›</button><button class="nav-btn" onclick="moveYear(1)">»</button></div>
+        <div class="header-right">
+            <div onclick="openSettings()" style="cursor:pointer; color:var(--text-sub);"><svg width="24" height="24" viewBox="0 0 16 16" fill="currentColor"><path d="M9.405 1.05c-.413-.957-1.712-.957-2.126 0l-.428.992c-.22.508-.816.712-1.284.462l-.993-.532c-.93-.498-2.03.206-1.97 1.258l.064 1.09c.027.464-.313.916-.78 1.026l-1.094.258c-1.02.24-1.298 1.54-.44 2.213l.868.68c.371.292.472.812.228 1.22l-.568.947c-.544.908.204 2.062 1.233 1.956l1.091-.112c.468-.048.913.313 1.024.781l.259 1.094c.24 1.02 1.54 1.298 2.213.44l.68-.868c.292-.371.812-.472 1.22-.228l.947.568c.908.544 2.062-.204 1.956-1.233zM8 4.75a3.25 3.25 0 1 1 0 6.5 3.25 3.25 0 0 1 0-6.5z"/></svg></div>
+        </div>
+    </div>
+    <div class="grid-main" id="mainGrid"></div>
+</div>
+<!-- 모달 레이어들 -->
+<div id="modal" class="modal" onclick="if(event.target==this) closeModal()">
+    <div class="modal-content">
+        <div id="modalTitle" style="font-weight:bold; text-align:center; margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:5px;"></div>
+        <div class="input-row" style="display:flex; gap:8px; margin-bottom:12px;"><input type="text" id="inName" placeholder="수입 내용"><input type="number" id="inAmt" placeholder="금액"></div>
+        <div class="input-row" style="display:flex; gap:8px; margin-bottom:12px;"><input type="text" id="outName" placeholder="지출 내용"><input type="number" id="outAmt" placeholder="금액"></div>
+        <button class="confirm-btn" onclick="quickSave()">확인</button>
+        <div id="historyList" style="margin-top:15px; max-height:100px; overflow-y:auto; font-size:0.75rem; border-top:1px solid var(--border-color); padding-top:10px; scrollbar-width: none;"></div>
+        <button onclick="closeModal()" style="width:100%; border:none; background:none; color:#aaa; font-size:0.8rem; margin-top:15px; cursor:pointer;">닫기</button>
+    </div>
+</div>
+
+<div id="settingsModal" class="modal" onclick="if(event.target==this) this.style.display='none'">
+    <div class="modal-content">
+        <div style="font-weight:bold; text-align:center; margin-bottom:20px;">설정</div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span>야간 모드</span><button onclick="toggleDark()" id="darkBtn" style="padding:5px 10px; border-radius:8px; border:1px solid #ccc;">OFF</button></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span>시작 요일</span><button onclick="toggleStartDay()" id="startDayBtn" style="padding:5px 10px; border-radius:8px; border:1px solid #ccc;">월요일</button></div>
+        <div style="margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;"><span>알림 시간 (오전)</span><input type="time" id="alarmTime" onchange="db.alarmTime=this.value; save();" style="padding:4px; border-radius:5px; border:1px solid #ccc;"></div>
+        
+<div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+    <span>자동 백업</span>
+    <input type="checkbox" id="autoBackupToggle" onchange="toggleAutoBackup(this.checked)">
+</div>
+<div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+    <span>마지막 백업</span>
+    <span id="lastBackupText" style="font-size:0.8rem; color:#888;">없음</span>
+</div>
+<div style="display:flex; justify-content:space-between; align-items:center;"><span>데이터 관리</span>
+<div><button onclick="exportData()" style="padding:5px 10px; font-size:0.7rem; border-radius:5px; border:1px solid #ccc;">백업</button><button onclick="document.getElementById('importFile').click()" style="padding:5px 10px; font-size:0.7rem; border-radius:5px; border:1px solid #ccc;">복원</button></div></div>
+        <input type="file" id="importFile" style="display:none" onchange="importData(this)">
+        <button class="confirm-btn" style="margin-top:20px; background:#eee; color:#333;" onclick="document.getElementById('settingsModal').style.display='none'">닫기</button>
+    </div>
+</div>
+
+<script>
+    const LUNAR_DATA = { 
+        2024:{seol:"2-10", budda:"5-15", chuseok:"9-17"}, 2025:{seol:"1-29", budda:"5-5", chuseok:"10-6"}, 
+        2026:{seol:"2-17", budda:"5-24", chuseok:"9-25"}, 2027:{seol:"2-6", budda:"5-13", chuseok:"9-15"}, 
+        2028:{seol:"1-26", budda:"5-2", chuseok:"10-3"}, 2029:{seol:"2-13", budda:"5-20", chuseok:"9-22"}, 
+        2030:{seol:"2-2", budda:"5-9", chuseok:"9-12"} 
+    };
+
+    function getHolidays(y, m, d) {
+        let res = null;
+        const RED = { "1-1":"신정","3-1":"삼일절","5-5":"어린이날","6-6":"현충일","8-15":"광복절","10-3":"개천절","10-9":"한글날","12-25":"성탄절" };
+        const BLACK = { "5-1":"근로자의날","5-8":"어버이날","5-15":"스승의날","10-1":"국군의날" };
+        const dt = new Date(y, m-1, d); const day = dt.getDay(); 
+
+        const lunar = LUNAR_DATA[y];
+        if(lunar) {
+            if(`${m}-${d}`===lunar.budda) res={t:"석가탄신일",c:"txt-red"};
+            const [sm,sd]=lunar.seol.split('-').map(Number);
+            if([`${sm}-${sd-1}`,`${sm}-${sd}`,`${sm}-${sd+1}`].includes(`${m}-${d}`)) res={t:"설날연휴",c:"txt-red"};
+            const [cm,cd]=lunar.chuseok.split('-').map(Number);
+            if([`${cm}-${cd-1}`,`${cm}-${cd}`,`${cm}-${cd+1}`].includes(`${m}-${d}`)) res={t:"추석연휴",c:"txt-red"};
+            
+            // 설날/추석 대체공휴일 정밀 계산 (연휴 중 일요일이 포함되면 다음 비공휴일 하루 대체)
+            const isSeolSun = [new Date(y,sm-1,sd-1).getDay(), new Date(y,sm-1,sd).getDay(), new Date(y,sm-1,sd+1).getDay()].includes(0);
+            if(isSeolSun && m===sm && d===sd+2) res={t:"대체공휴일",c:"txt-red"};
+            const isChuseokSun = [new Date(y,cm-1,cd-1).getDay(), new Date(y,cm-1,cd).getDay(), new Date(y,cm-1,cd+1).getDay()].includes(0);
+            if(isChuseokSun && m===cm && d===cd+2) res={t:"대체공휴일",c:"txt-red"};
+        }
+
+        // 고정일 공휴일 국경일 대체 (삼일절, 광복절, 개천절, 한글날, 어린이날, 성탄절)
+        if(!res && RED[`${m}-${d}`]) res={t:RED[`${m}-${d}`],c:"txt-red"};
+        const replaceList = ["3-1","5-5","8-15","10-3","10-9","12-25"];
+        replaceList.forEach(s => {
+            const [mm,dd]=s.split('-').map(Number); const oDay=new Date(y,mm-1,dd).getDay();
+            if(oDay===0 && m===mm && d===dd+1) res={t:"대체공휴일",c:"txt-red"}; // 일요일 -> 월요일
+            if(oDay===6 && m===mm && d===dd+2) res={t:"대체공휴일",c:"txt-red"}; // 토요일 -> 월요일
+        });
+
+        // 부처님오신날 대체공휴일 (토/일이면 월요일)
+        if(lunar && !res) {
+            const [bm,bd]=lunar.budda.split('-').map(Number); const bDay=new Date(y,bm-1,bd).getDay();
+            if(m===bm && ((bDay===0 && d===bd+1)||(bDay===6 && d===bd+2))) res={t:"대체공휴일",c:"txt-red"};
+        }
+
+        if(!res && BLACK[`${m}-${d}`]) res={t:BLACK[`${m}-${d}`],c:"txt-black"};
+        return res;
+    }
+
+    function get24Seasons(m, d) {
+        const s = { "1-5":"소한","1-20":"대한","2-4":"입춘","2-19":"우수","3-5":"경칩","3-20":"춘분","4-5":"청명","4-20":"곡우","5-5":"입하","5-21":"소만","6-5":"망종","6-21":"하지","7-7":"소서","7-22":"대서","8-7":"입추","8-23":"처서","9-7":"백로","9-23":"추분","10-8":"한로","10-23":"상강","11-7":"입동","11-22":"소설","12-7":"대설","12-22":"동지" };
+        return s[`${m}-${d}`] ? {t:s[`${m}-${d}`], c:"txt-green"} : null;
+    }
+
+    let curr = new Date();
+    const dbKey = "pastel_eternal_final_v32";
+    let db = JSON.parse(localStorage.getItem(dbKey)) || { isDark: false, startDaySun: false, alarmTime: "09:00", autoBackup: false, lastBackup: null };
+    let activeKey = "";
+    const alarmSound = new Audio("alarm.mp3");
+
+    function save() { localStorage.setItem(dbKey, JSON.stringify(db)); autoBackup(); }
+    window.onload = function() {
+        if(db.isDark) document.body.classList.add('dark-mode');
+        document.getElementById('darkBtn').innerText = db.isDark ? "ON" : "OFF";
+        document.getElementById('startDayBtn').innerText = db.startDaySun ? "일요일" : "월요일";
+        document.getElementById('alarmTime').value = db.alarmTime || "09:00";
+        document.getElementById('autoBackupToggle').checked = db.autoBackup || false;
+        updateLastBackupText();
+        
+        init(); setInterval(checkAlarm, 30000);
+    };
+
+    
+
+    function init() { renderSelectors(); renderCalendar(); }
+    function toggleDark() { db.isDark = !db.isDark; document.body.classList.toggle('dark-mode', db.isDark); document.getElementById('darkBtn').innerText = db.isDark ? "ON" : "OFF"; save(); }
+    function toggleStartDay() { db.startDaySun = !db.startDaySun; document.getElementById('startDayBtn').innerText = db.startDaySun ? "일요일" : "월요일"; save(); init(); }
+    function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+    function jump() { 
+        curr = new Date(document.getElementById('yearSelect').value, document.getElementById('monthSelect').value-1, 1); 
+        renderCalendar(); 
+    }
+    function moveMonth(v) { curr.setMonth(curr.getMonth() + v); init(); }
+    function moveYear(v) { curr.setFullYear(curr.getFullYear() + v); init(); }
+
+    function checkAlarm() {
+        const now = new Date();
+        const time = now.getHours().toString().padStart(2,'0')+":"+now.getMinutes().toString().padStart(2,'0');
+        if(time === db.alarmTime) {
+            const k = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;
+            if(db[k] && (db[k].m1?.includes('!') || db[k].m2?.includes('!') || db[k].m3?.includes('!'))) {
+                alarmSound.play(); alert("중요 알림이 있습니다!");
+            }
+        }
+    }
+
+    function exportData() {
+        const blob = new Blob([JSON.stringify(db)], {type:'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = '가계부백업.json'; a.click();
+    }
+
+    function importData(input) {
+        const reader = new FileReader();
+        reader.onload = (e) => { try { db = JSON.parse(e.target.result); save(); location.reload(); } catch(e){alert("파일이 올바르지 않습니다.");} };
+        reader.readAsText(input.files[0]);
+    }
+
+    function renderSelectors() {
+        const yS = document.getElementById('yearSelect'), mS = document.getElementById('monthSelect');
+        yS.innerHTML = ''; mS.innerHTML = '';
+        for(let i=2024; i<=2035; i++){ let o = new Option(i, i); if(i===curr.getFullYear()) o.selected=true; yS.add(o); }
+        for(let i=1; i<=12; i++){ let o = new Option(i, i); if(i===curr.getMonth()+1) o.selected=true; mS.add(o); }
+    }
+
+    function renderCalendar() {
+        const grid = document.getElementById('mainGrid'); grid.innerHTML = '';
+        const y = curr.getFullYear(), m = curr.getMonth();
+        for(let i=0; i<8; i++){ const k=`fixed-top-${i}`; const c=document.createElement('div'); c.className="cell split-memo"; c.innerHTML=`<textarea onblur="db['${k}']=this.value; save()">${db[k]||''}</textarea>`; grid.appendChild(c); }
+        const days = db.startDaySun ? ['주차','일','월','화','수','목','금','토'] : ['주차','월','화','수','목','금','토','일'];
+        days.forEach(d => { const c=document.createElement('div'); c.className=`day-label ${d==='토'?'sat':(d==='일'||d==='주차'?'sun':'')}`; c.innerText=d; grid.appendChild(c); });
+        const firstD = new Date(y, m, 1).getDay();
+        let startIdx = db.startDaySun ? firstD : (firstD===0?6:firstD-1);
+        const lastD = new Date(y, m+1, 0).getDate();
+        let dateCount=1, runningBal=0, lastRec=0;
+        for(let d=1; d<=lastD; d++) if(db[`${y}-${m+1}-${d}`]?.entries?.length>0) lastRec=d;
+        for(let w=0; w<6; w++) {
+            const weekCell=document.createElement('div'); weekCell.className="cell week-cell";
+            const isL=(w===5); weekCell.innerHTML=`<div class="week-box"><div class="week-title">${isL?'1주 계획':(w+1)+'주 계획'}</div><div class="week-text" contenteditable="true" onblur="saveWeek(${y},m+1,${w},'plan',this)">${getWeekData(y,m+1,w,'plan')}</div></div><div class="week-box"><div class="week-title">${isL?'1주 평가':(w+1)+'주 평가'}</div><div class="week-text" contenteditable="true" onblur="saveWeek(${y},m+1,${w},'eval',this)">${getWeekData(y,m+1,w,'eval')}</div></div>`;
+            grid.appendChild(weekCell);
+            for(let d=0; d<7; d++) {
+                const c=document.createElement('div'); c.className="cell"; const idx=w*7+d;
+                if(idx>=startIdx && dateCount<=lastD) {
+                    const k=`${y}-${m+1}-${dateCount}`, dI=new Date(y,m,dateCount).getDay(), dayD=db[k]||{entries:[]};
+                    let tin=0, tout=0; dayD.entries.forEach(e=>{if(e.type==='in')tin+=Number(e.amount);else tout+=Number(e.amount);});
+                    runningBal+=(tin-tout); const h=getHolidays(y,m+1,dateCount), s=get24Seasons(m+1,dateCount);
+                    let lines=[]; if(s)lines.push(s); if(h)lines.push(h);
+                    c.innerHTML=`<div class="date-top-row" onclick="openModal('${k}')"><div class="left-info-stack"><span class="date-num ${dI===0?'sun':(dI===6?'sat':'')}">${dateCount}</span>${lines.map((l,i)=>`<span class="line-${i+1} ${l.c}">${l.t}</span>`).join('')}</div><div class="money-info-group">${dateCount<=lastRec?`<span class="in-s">+${tin.toLocaleString()}</span><span class="out-s">-${tout.toLocaleString()}</span><span class="bal-s">${runningBal.toLocaleString()}</span>`:''}</div></div><div class="cell-memos"><textarea onblur="upMemo('${k}','m1',this.value)">${dayD.m1||''}</textarea><textarea onblur="upMemo('${k}','m2',this.value)">${dayD.m2||''}</textarea><textarea onblur="upMemo('${k}','m3',this.value)">${dayD.m3||''}</textarea></div>`;
+                    dateCount++;
+                }
+                grid.appendChild(c);
+            }
+        }
+        for(let i=0; i<8; i++){ const k=`fixed-bot-${i}`; const c=document.createElement('div'); c.className="cell split-memo"; c.innerHTML=`<textarea onblur="db['${k}']=this.value; save()">${db[k]||''}</textarea>`; grid.appendChild(c); }
+    }
+    function getWeekData(y,m,w,t){ if(w===0){let pM=m-1,pY=y; if(pM===0){pM=12;pY--;} if(db[`${pY}-${pM}-w5-${t}`]) return db[`${pY}-${pM}-w5-${t}`];} return db[`${y}-${m}-w${w}-${t}`]||""; }
+    function saveWeek(y,m,w,t,el){ db[`${y}-${m}-w${w}-${t}`]=el.innerText; if(w===5){let nM=Number(m)+1,nY=y; if(nM>12){nM=1;nY++;} db[`${nY}-${nM}-w0-${t}`]=el.innerText;} save(); }
+    function upMemo(k,t,v){ if(!db[k])db[k]={entries:[],m1:'',m2:'',m3:''}; db[k][t]=v; save(); }
+    function openModal(k){ activeKey=k; document.getElementById('modalTitle').innerText=k; document.getElementById('modal').style.display='flex'; renderHistory(); document.getElementById('inName').focus(); }
+    function quickSave(){
+        const iN=document.getElementById('inName').value, iA=document.getElementById('inAmt').value, oN=document.getElementById('outName').value, oA=document.getElementById('outAmt').value;
+        if(!iA && !oA){closeModal(); return;} if(!db[activeKey])db[activeKey]={entries:[],m1:'',m2:'',m3:''};
+        if(iA) db[activeKey].entries.push({name:iN||'수입', amount:iA, type:'in'}); if(oA) db[activeKey].entries.push({name:oN||'지출', amount:oA, type:'out'});
+        save(); renderHistory(); renderCalendar(); document.getElementById('inName').value=''; document.getElementById('inAmt').value=''; document.getElementById('outName').value=''; document.getElementById('outAmt').value='';
+    }
+    function renderHistory(){ const list=document.getElementById('historyList'); list.innerHTML=''; (db[activeKey]?.entries||[]).slice().reverse().forEach(e=>{ const d=document.createElement('div'); d.style.display="flex"; d.style.justifyContent="space-between"; d.innerHTML=`<span>${e.name}</span><span style="color:${e.type==='in'?'var(--income-color)':'var(--expense-color)'}">${e.type==='in'?'+':'-'}${Number(e.amount).toLocaleString()}</span>`; list.appendChild(d); }); }
+    function searchMemos(){
+        const q=document.getElementById('searchInput').value, res=document.getElementById('search-res');
+        if(!q){res.style.display='none'; return;} res.innerHTML=''; res.style.display='block';
+        Object.keys(db).forEach(k=>{ if(k.startsWith('fixed')||['isDark','startDaySun','alarmTime'].includes(k)) return; const d=db[k], c=typeof d==='object'?`${d.m1||''} ${d.m2||''} ${d.m3||''}`:d; if(c&&c.includes(q)){ const item=document.createElement('div'); item.className='res-item'; let p=k.split('-'); item.innerHTML=`<strong>${k}</strong><br><small>${c.substring(0,20)}</small>`; item.onclick=()=>{curr=new Date(p[0],p[1]-1,1); init(); res.style.display='none';}; res.appendChild(item); } });
+    }
+
+function toggleAutoBackup(val) {
+    db.autoBackup = val;
+    save();
+}
+
+function updateLastBackupText() {
+    const el = document.getElementById('lastBackupText');
+    if (!db.lastBackup) {
+        el.innerText = "없음";
+        return;
+    }
+    const d = new Date(db.lastBackup);
+    el.innerText = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function autoBackup() {
+    if (!db.autoBackup) return;
+    const blob = new Blob([JSON.stringify(db)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    const now = new Date();
+    a.download = `가계부자동백업_${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}_${now.getHours()}-${now.getMinutes()}.json`;
+    a.click();
+    db.lastBackup = now.toISOString();
+    localStorage.setItem(dbKey, JSON.stringify(db)); // 직접 저장 (재귀 방지)
+    updateLastBackupText();
+}
+
+</script>
+</body>
+</html>
