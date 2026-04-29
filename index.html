@@ -18,7 +18,13 @@
             --input-bg: #2c2e33; --income-color: #ff8787; --expense-color: #74c0fc;
         }
 html {
-  font-size: 1.1vmin;
+  font-size: 1.1vmin; /* 기본 (데스크탑) */
+}
+@media (max-width: 768px) {
+  html { font-size: 0.75vmin; } /* 모바일 세로 */
+}
+@media (max-height: 500px) {
+  html { font-size: 0.9vmin; } /* 모바일 가로 */
 }
 
 body {
