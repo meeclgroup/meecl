@@ -18,7 +18,7 @@
             --input-bg: #2c2e33; --income-color: #ff8787; --expense-color: #74c0fc;
         }
 html {
-  font-size: clamp(4px, 1.8vw, 16px);
+  font-size: 1.5vmin;
 }
 
 body {
@@ -110,8 +110,8 @@ body {
             color: var(--text-main); 
         }
         .nav-center { justify-self: center; display: flex; align-items: center; gap: clamp(3px, 0.8vw, 8px); background: var(--container-bg); padding: clamp(2px, 0.5vh, 5px) clamp(8px, 2vw, 15px); border-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .nav-btn { cursor: pointer; border: none; background: var(--input-bg); color: var(--text-main); border-radius: 50%; width: clamp(18px, 3.5vh, 28px); height: clamp(18px, 3.5vh, 28px); font-weight: bold; font-size: clamp(0.3rem, 1.8vh, 1rem); }
-        select { border: none; font-size: clamp(0.3rem, 1.8vh, 1rem); font-weight: bold; background: transparent; color: var(--text-main); outline: none; }
+        .nav-btn { cursor: pointer; border: none; background: var(--input-bg); color: var(--text-main); border-radius: 50%; width: 2rem; height: 2rem; font-weight: bold; font-size: 1rem; }
+        select { border: none; font-size: 1rem; font-weight: bold; background: transparent; color: var(--text-main); outline: none; }
 
 .grid-main {
   display: grid;
@@ -129,24 +129,24 @@ body {
 }
         .cell { border: 1px solid var(--border-color); border-radius: clamp(6px, 1.2vw, 12px); display: flex; flex-direction: column; overflow: hidden; background: var(--container-bg); position: relative; }
         .split-memo { background: var(--memo-bg); border: 1px dashed #ffd43b; }
-        .split-memo textarea { width: 100%; height: 100%; border: none; background: transparent; resize: none; padding: clamp(2px, 0.5vw, 5px); font-size: clamp(0.5rem, 1vw, 0.75rem); color: var(--text-main); box-sizing: border-box; outline: none; }
-        .day-label { text-align: center; font-weight: bold; font-size: clamp(0.2rem, 1vw, 0.75rem); line-height: clamp(18px, 3.5vw, 26px); color: var(--text-sub); background: var(--input-bg); }
+        .split-memo textarea { width: 100%; height: 100%; border: none; background: transparent; resize: none; padding: 0.3rem; font-size: 0.75rem; color: var(--text-main); box-sizing: border-box; outline: none; }
+        .day-label { text-align: center; font-weight: bold; font-size: 0.9rem; line-height: clamp(18px, 3.5vw, 26px); color: var(--text-sub); background: var(--input-bg); }
         .day-label.week-col { color: var(--season-color) !important; }
         .sat { color: var(--sat-color) !important; } .sun { color: var(--holiday-color) !important; }
 
-        .date-top-row { display: flex; justify-content: space-between; padding: clamp(1px, 0.3vh, 3px) clamp(3px, 0.8vw, 7px); cursor: pointer; height: auto; min-height: 0; align-items: flex-start; flex-shrink: 0; overflow: hidden; }
-        .left-info-stack { display: grid; grid-template-columns: auto 1fr; column-gap: clamp(2px, 0.4vw, 4px); flex: 1; line-height: 1.0; min-width: 0; overflow: hidden; }
-        .date-num { grid-row: 1/4; grid-column: 1; font-weight: bold; font-size: clamp(0.3rem, 1.4vw, 1.1rem); line-height: 1; color: var(--text-main); padding-top: 1px; }
+        .date-top-row { display: flex; justify-content: space-between; padding: 0.2rem 0.4rem; cursor: pointer; height: auto; min-height: 0; align-items: flex-start; flex-shrink: 0; overflow: hidden; }
+        .left-info-stack { display: grid; grid-template-columns: auto 1fr; column-gap: 0.25rem; flex: 1; line-height: 1.0; min-width: 0; overflow: hidden; }
+        .date-num { grid-row: 1/4; grid-column: 1; font-weight: bold; font-size: 1.1rem; line-height: 1; color: var(--text-main); padding-top: 1px; }
         
-        .line-1, .line-2, .line-3 { grid-column: 2; font-size: clamp(0.2rem, 0.7vw, 0.55rem); font-weight: bold; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+        .line-1, .line-2, .line-3 { grid-column: 2; font-size: 0.7rem; font-weight: bold; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
         .txt-red { color: var(--holiday-color) !important; } .txt-green { color: var(--season-color) !important; } .txt-black { color: var(--normal-day-color); }
         
-        .money-info-group { display: flex; flex-direction: column; text-align: right; width: clamp(18px, 5.5vw, 50px); font-size: clamp(0.18rem, 0.68vw, 0.55rem); line-height: 1.15; color: var(--text-main); flex-shrink: 0; margin-left: 2px; }
+        .money-info-group { display: flex; flex-direction: column; text-align: right; width: 4rem; font-size: 0.68rem; line-height: 1.15; color: var(--text-main); flex-shrink: 0; margin-left: 0.15rem; }
         .in-s { color: var(--income-color); font-weight: bold; } .out-s { color: var(--expense-color); font-weight: bold; } 
         .bal-s { font-weight: 900; color: var(--text-main); }
 
         .cell-memos { flex-grow: 1; display: flex; flex-direction: column; padding: clamp(1px, 0.3vw, 2px); gap: 1px; overflow: hidden; }
-        .cell-memos textarea { flex: 1; border: none; background: var(--input-bg); color: var(--text-main); border-radius: clamp(3px, 0.6vw, 6px); padding: clamp(1px, 0.3vw, 3px) clamp(2px, 0.5vw, 4px); font-size: clamp(0.2rem, 1vw, 0.78rem); resize: none; line-height: 1.1; outline: none; scrollbar-width: none; }
+        .cell-memos textarea { flex: 1; border: none; background: var(--input-bg); color: var(--text-main); border-radius: 0.4rem; padding: 0.15rem 0.25rem; font-size: 0.78rem; resize: none; line-height: 1.1; outline: none; scrollbar-width: none; }
         /* 포커스 중인 textarea 오른쪽 하단 보라색 점 */
         .cell { position: relative; }
         .cell-memos textarea:focus { background: #f3f0ff; }
@@ -160,7 +160,7 @@ body {
         .week-box { height: 48.5%; border: 1px solid var(--border-color); border-radius: clamp(4px, 0.8vw, 8px); background: var(--container-bg); margin-bottom: 3%; padding: clamp(2px, 0.5vw, 4px); display: flex; flex-direction: column; overflow: hidden; box-sizing: border-box; }
         .week-box:last-child { margin-bottom: 0; }
         .week-title { display: none; }
-        .week-text { flex-grow: 1; font-size: clamp(0.2rem, 0.95vw, 0.72rem); color: #888; outline: none; overflow-y: auto; white-space: pre-wrap; word-break: break-all; scrollbar-width: none; }
+        .week-text { flex-grow: 1; font-size: 0.72rem; color: #888; outline: none; overflow-y: auto; white-space: pre-wrap; word-break: break-all; scrollbar-width: none; }
 
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 5000; }
         .modal-content { background: var(--container-bg); color: var(--text-main); padding: clamp(12px, 3vw, 22px); border-radius: 20px; width: 90%; max-width: 340px; box-shadow: 0 15px 50px rgba(0,0,0,0.2); box-sizing: border-box; font-size: clamp(0.75rem, 2vw, 1rem); }
