@@ -18,7 +18,7 @@
             --input-bg: #2c2e33; --income-color: #ff8787; --expense-color: #74c0fc;
         }
 html {
-  font-size:1rem; 
+  font-size:0.5rem; 
 }
 
 body {
@@ -29,6 +29,17 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   touch-action: pan-x pan-y;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  padding: clamp(2px, 0.8vh, 8px) clamp(4px, 1vw, 10px);
+  box-sizing: border-box;
+  transform-origin: top left;
+  will-change: transform;
 }
         
 .header { 
